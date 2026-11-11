@@ -10,10 +10,10 @@ const testUser = async () => {
         console.log("Database connected!");
 
         const user = await User.create({
-            name: "Vedant Bhange",
-            email: "vedant@example.com",
+            name: " Sundar Pichai ",
+            email: "sundar@example.com",
             password: "TestPassword123",
-            role: "customer"
+            role: "agent"
         });
 
         console.log("User created successfully:");
