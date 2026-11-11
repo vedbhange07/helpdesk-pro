@@ -10,6 +10,8 @@ const connectDB = require("./config/db");
 dotenv.config();
 
 const app = express();
+const authRoutes = require("./routes/authRoutes");
+
 
 // Middlewares
 app.use(express.json());
@@ -17,6 +19,7 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
 
+app.use("/api/auth", authRoutes);
 // Health Check API
 app.post("/api/health", (req, res) => {
     res.status(200).json({
