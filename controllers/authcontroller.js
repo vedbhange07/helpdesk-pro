@@ -123,14 +123,7 @@ const loginUser = async (req, res) => {
 };
 const getProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.userId);
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
+        const user = req.user;
 
         return res.status(200).json({
             success: true,
@@ -143,6 +136,8 @@ const getProfile = async (req, res) => {
         });
 
     } catch (error) {
+        console.error("Profile error:", error.message);
+
         return res.status(500).json({
             success: false,
             message: "Internal server error"
