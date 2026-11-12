@@ -11,6 +11,8 @@ dotenv.config();
 
 const app = express();
 const authRoutes = require("./routes/authRoutes");
+const roleRoutes = require("./routes/roleRoutes");
+const ticketRoutes = require("./routes/ticketRoutes");
 
 
 // Middlewares
@@ -20,6 +22,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/roles", roleRoutes);
 // Health Check API
 app.post("/api/health", (req, res) => {
     res.status(200).json({
