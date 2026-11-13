@@ -7,7 +7,7 @@ const authorizeRoles = require("../middleware/roleMiddleware");
 const {
     createTicket,
     getMyTickets,
-    assignTicket
+        assignTicket
 } = require("../controllers/ticketController");
 
 const router = express.Router();
