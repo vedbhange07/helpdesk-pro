@@ -7,7 +7,9 @@ const authorizeRoles = require("../middleware/roleMiddleware");
 const {
     createTicket,
     getMyTickets,
-        assignTicket
+    assignTicket,
+    getAssignedTickets,
+    updateTicketStatus
 } = require("../controllers/ticketController");
 
 const router = express.Router();
@@ -78,6 +80,28 @@ router.put(
     ],
     validateRequest,
     assignTicket
+);
+router.get(
+    "/assigned",
+    protect,
+    authorizeRoles("agent"),
+    getAssignedTickets
+);
+router.patch(
+    "/:ticketId/status",
+    protect,
+    authorizeRoles("agent"),
+    [
+        param("ticketId")
+            .isMongoId()
+            .withMessage("Invalid ticket ID"),
+
+        body("status")
+            .isIn(["in-progress", "resolved"])
+            .withMessage("Status must be in-progress or resolved")
+    ],
+    validateRequest,
+    updateTicketStatus
 );
 
 module.exports = router;
