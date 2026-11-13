@@ -1,4 +1,5 @@
 const Ticket = require("../models/Ticket");
+const User = require("../models/User");
 
 // CREATE TICKET
 const createTicket = async (req, res) => {

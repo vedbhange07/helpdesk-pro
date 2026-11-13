@@ -23,6 +23,7 @@ app.use(morgan("dev"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/roles", roleRoutes);
+app.use("/api/tickets", ticketRoutes);
 // Health Check API
 app.post("/api/health", (req, res) => {
     res.status(200).json({
