@@ -1,12 +1,13 @@
 const express = require("express");
-const { body, validationResult } = require("express-validator");
+const { body,param,validationResult } = require("express-validator");
 
 const protect = require("../middleware/authMiddleware");
 const authorizeRoles = require("../middleware/roleMiddleware");
 
 const {
     createTicket,
-    getMyTickets
+    getMyTickets,
+    assignTicket
 } = require("../controllers/ticketController");
 
 const router = express.Router();
@@ -59,6 +60,24 @@ router.get(
     protect,
     authorizeRoles("customer"),
     getMyTickets
+);
+
+// ASSIGN TICKET - ADMIN ONLY
+router.put(
+    "/:ticketId/assign",
+    protect,
+    authorizeRoles("admin"),
+    [
+        param("ticketId")
+            .isMongoId()
+            .withMessage("Invalid ticket ID"),
+
+        body("agentId")
+            .isMongoId()
+            .withMessage("Valid agent ID is required")
+    ],
+    validateRequest,
+    assignTicket
 );
 
 module.exports = router;
