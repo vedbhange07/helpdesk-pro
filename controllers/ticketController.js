@@ -186,6 +186,7 @@ const updateTicketStatus = async (req, res) => {
     }
 };
 
+
 module.exports = {
     createTicket,
     getMyTickets,
