@@ -13,6 +13,7 @@ const app = express();
 const authRoutes = require("./routes/authRoutes");
 const roleRoutes = require("./routes/roleRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
 
 // Middlewares
@@ -24,6 +25,8 @@ app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/tickets", ticketRoutes);
+app.use("/api/tickets", messageRoutes);
+
 // Health Check API
 app.post("/api/health", (req, res) => {
     res.status(200).json({
