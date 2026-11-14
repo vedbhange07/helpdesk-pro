@@ -9,7 +9,8 @@ const {
     getMyTickets,
     assignTicket,
     getAssignedTickets,
-    updateTicketStatus
+    updateTicketStatus,
+    getTicketById
 } = require("../controllers/ticketController");
 
 const router = express.Router();
@@ -87,6 +88,19 @@ router.get(
     authorizeRoles("agent"),
     getAssignedTickets
 );
+// GET SINGLE TICKET - ADMIN, AGENT, CUSTOMER
+router.get(
+    "/:ticketId",
+    protect,
+    authorizeRoles("admin", "agent", "customer"),
+    [
+        param("ticketId")
+            .isMongoId()
+            .withMessage("Invalid ticket ID")
+    ],
+    validateRequest,
+    getTicketById
+);
 router.patch(
     "/:ticketId/status",
     protect,
@@ -103,5 +117,6 @@ router.patch(
     validateRequest,
     updateTicketStatus
 );
+
 
 module.exports = router;

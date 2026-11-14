@@ -185,12 +185,59 @@ const updateTicketStatus = async (req, res) => {
         });
     }
 };
+// GET SINGLE TICKET BY ID
+const getTicketById = async (req, res) => {
+    try {
+        const { ticketId } = req.params;
 
+        // Base ticket search
+        const filter = {
+            _id: ticketId
+        };
+
+        // Customers can only see their own tickets
+        if (req.user.role === "customer") {
+            filter.customer = req.user._id;
+        }
+
+        // Agents can only see tickets assigned to them
+        else if (req.user.role === "agent") {
+            filter.assignedAgent = req.user._id;
+        }
+
+        // Admin can view any ticket
+
+        const ticket = await Ticket.findOne(filter)
+            .populate("customer", "name email")
+            .populate("assignedAgent", "name email");
+
+        if (!ticket) {
+            return res.status(404).json({
+                success: false,
+                message: "Ticket not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            ticket
+        });
+
+    } catch (error) {
+        console.error("Get ticket error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};
 
 module.exports = {
     createTicket,
     getMyTickets,
     assignTicket,
     getAssignedTickets,
-    updateTicketStatus
+    updateTicketStatus,
+    getTicketById
 };
