@@ -66,6 +66,14 @@ const sendMessage = async (req, res) => {
         });
 
         await newMessage.populate("sender", "name email role");
+        // Send the saved message to connected ticket users
+        const io = req.app.get("io");
+
+        io.to(`ticket:${ticket._id}`).emit(
+         "new_message",
+         newMessage
+        );                 
+        
 
         return res.status(201).json({
             success: true,
