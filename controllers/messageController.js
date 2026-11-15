@@ -1,5 +1,6 @@
 const Message = require("../models/Message");
 const Ticket = require("../models/Ticket");
+const createNotification = require("../services/notificationService");
 
 // CHECK WHETHER USER CAN ACCESS THIS TICKET
 const canAccessTicket = (ticket, user) => {
@@ -66,13 +67,36 @@ const sendMessage = async (req, res) => {
         });
 
         await newMessage.populate("sender", "name email role");
-        // Send the saved message to connected ticket users
-        const io = req.app.get("io");
+        // Real-time message delivery to ticket participants
+const io = req.app.get("io");
 
-        io.to(`ticket:${ticket._id}`).emit(
-         "new_message",
-         newMessage
-        );                 
+io.to(`ticket:${ticket._id}`).emit(
+    "new_message",
+    newMessage
+);
+
+// Notify the other participant
+let recipientId = null;
+
+if (req.user.role === "customer") {
+    recipientId = ticket.assignedAgent;
+} else if (req.user.role === "agent") {
+    recipientId = ticket.customer;
+}
+
+if (
+    recipientId &&
+    recipientId.toString() !== req.user._id.toString()
+) {
+    await createNotification({
+        recipient: recipientId,
+        sender: req.user._id,
+        ticket: ticket._id,
+        type: "new_message",
+        message: `New message on ticket: ${ticket.title}`,
+        io
+    });
+}  
         
 
         return res.status(201).json({

@@ -17,6 +17,7 @@ const ticketRoutes = require("./routes/ticketRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 
 const socketHandler = require("./sockets/socketHandler");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/tickets", ticketRoutes);
 app.use("/api/tickets", messageRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

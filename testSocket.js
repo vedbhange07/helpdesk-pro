@@ -36,6 +36,13 @@ socket.on("new_message", (message) => {
     console.log("Message:", message.message);
     console.log("Time:", message.createdAt);
 });
+socket.on("new_notification", (notification) => {
+    console.log("\nNEW NOTIFICATION RECEIVED");
+    console.log("-------------------------");
+    console.log("Type:", notification.type);
+    console.log("Message:", notification.message);
+    console.log("Read:", notification.isRead);
+});
 
 socket.on("socket_error", (error) => {
     console.log("Socket error:", error.message);

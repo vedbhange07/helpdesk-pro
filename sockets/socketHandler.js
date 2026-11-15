@@ -63,6 +63,13 @@ const socketHandler = (io) => {
 
     // Handle socket connection
     io.on("connection", (socket) => {
+         // Automatically join the logged-in user's personal room
+        const userRoom = `user:${socket.user._id.toString()}`;
+
+        socket.join(userRoom);
+
+        console.log(`${socket.user.email} joined ${userRoom}`);
+                
 
         console.log(
             `User connected: ${socket.user.email}`
