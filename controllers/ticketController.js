@@ -1,5 +1,6 @@
 const Ticket = require("../models/Ticket");
 const User = require("../models/User");
+const createNotification = require("../services/notificationService");
 
 // CREATE TICKET
 const createTicket = async (req, res) => {
@@ -91,6 +92,16 @@ const assignTicket = async (req, res) => {
         ticket.assignedAgent = agent._id;
 
         await ticket.save();
+        const io = req.app.get("io");
+
+        await createNotification({
+            recipient: ticket.assignedAgent,
+            sender: req.user._id,
+            ticket: ticket._id,
+            type: "ticket_assigned",
+            message: `A new ticket has been assigned to you: ${ticket.title}`,
+            io
+        });
 
         // Return populated information
         await ticket.populate("customer", "name email");
@@ -166,6 +177,16 @@ const updateTicketStatus = async (req, res) => {
         ticket.status = status;
 
         await ticket.save();
+        const io = req.app.get("io");
+
+        await createNotification({
+            recipient: ticket.customer,
+            sender: req.user._id,
+            ticket: ticket._id,
+            type: "status_changed",
+            message: `Your ticket status changed to ${ticket.status}`,
+            io
+        });
 
         await ticket.populate("customer", "name email");
         await ticket.populate("assignedAgent", "name email");
