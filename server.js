@@ -18,6 +18,7 @@ const messageRoutes = require("./routes/messageRoutes");
 
 const socketHandler = require("./sockets/socketHandler");
 const notificationRoutes = require("./routes/notificationRoutes");
+const createNotificationWorker = require("./workers/notificationWorker");
 
 const app = express();
 
@@ -64,6 +65,9 @@ socketHandler(io);
 const startServer = async () => {
     try {
         await connectDB();
+         // Start background notification worker
+        const notificationWorker =
+            createNotificationWorker(io);
 
         const PORT = process.env.PORT || 5000;
 

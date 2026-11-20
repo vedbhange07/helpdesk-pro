@@ -99,8 +99,8 @@ const assignTicket = async (req, res) => {
             sender: req.user._id,
             ticket: ticket._id,
             type: "ticket_assigned",
-            message: `A new ticket has been assigned to you: ${ticket.title}`,
-            io
+            message: `A new ticket has been assigned to you: ${ticket.title}`
+           
         });
 
         // Return populated information
@@ -184,8 +184,8 @@ const updateTicketStatus = async (req, res) => {
             sender: req.user._id,
             ticket: ticket._id,
             type: "status_changed",
-            message: `Your ticket status changed to ${ticket.status}`,
-            io
+            message: `Your ticket status changed to ${ticket.status}`
+           
         });
 
         await ticket.populate("customer", "name email");
