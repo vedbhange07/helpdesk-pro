@@ -1,37 +1,31 @@
-const Notification = require("../models/Notification");
+const notificationQueue = require("../queues/notificationQueue");
 
 const createNotification = async ({
     recipient,
     sender = null,
     ticket = null,
     type,
-    message,
-    io
+    message
 }) => {
     try {
-        const notification = await Notification.create({
-            recipient,
-            sender,
-            ticket,
-            type,
-            message
-        });
+        const job = await notificationQueue.add(
+            "create-notification",
+            {
+                recipient: recipient.toString(),
+                sender: sender ? sender.toString() : null,
+                ticket: ticket ? ticket.toString() : null,
+                type,
+                message
+            }
+        );
 
-        await notification.populate("sender", "name email");
+        console.log("Notification job added:", job.id);
 
-        // Deliver instantly to the recipient's personal room
-        if (io) {
-            io.to(`user:${recipient}`).emit(
-                "new_notification",
-                notification
-            );
-        }
-
-        return notification;
+        return job;
 
     } catch (error) {
         console.error(
-            "Notification creation error:",
+            "Failed to enqueue notification:",
             error.message
         );
 

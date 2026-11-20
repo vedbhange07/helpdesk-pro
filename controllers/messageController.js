@@ -93,8 +93,8 @@ if (
         sender: req.user._id,
         ticket: ticket._id,
         type: "new_message",
-        message: `New message on ticket: ${ticket.title}`,
-        io
+        message: `New message on ticket: ${ticket.title}`
+       
     });
 }  
         
